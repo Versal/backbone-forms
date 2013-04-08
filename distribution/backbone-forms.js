@@ -1272,6 +1272,7 @@ Form.editors.Text = Form.Editor.extend({
    */
   setValue: function(value) {
     this.$el.val(value);
+    this.previousValue = this.$el.val();
   },
 
   focus: function() {
@@ -1324,7 +1325,8 @@ Form.editors.Number = Form.editors.Text.extend({
   defaultValue: 0,
 
   events: _.extend({}, Form.editors.Text.prototype.events, {
-    'keypress': 'onKeyPress'
+    'keypress': 'onKeyPress',
+    'input':    'determineChange'
   }),
 
   initialize: function(options) {
@@ -1354,7 +1356,7 @@ Form.editors.Number = Form.editors.Text.extend({
     //Get the whole new value so that we can prevent things like double decimals points etc.
     var newVal = this.$el.val() + String.fromCharCode(event.charCode);
 
-    var numeric = /^[0-9]*\.?[0-9]*?$/.test(newVal);
+    var numeric = /^-?[0-9]*\.?[0-9]*$/.test(newVal);
 
     if (numeric) {
       delayedDetermineChange();
